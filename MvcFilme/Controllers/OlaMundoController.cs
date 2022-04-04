@@ -11,9 +11,12 @@ namespace MvcFilme.Controllers
         {
             return View();
         }
-        public string BemVindo(string nome, int id)
+        public ActionResult BemVindo(string nome, int numVezes)
         {
-            return HtmlEncoder.Default.Encode($"Ola {nome}, possui ID {id}");
+            ViewData["Mensagem"] = "Olá  " + nome+", tudobem?";
+            ViewData["NumVezes"] = numVezes;
+
+            return View();
         }
 
         // GET: OlaMundoController/Details/5

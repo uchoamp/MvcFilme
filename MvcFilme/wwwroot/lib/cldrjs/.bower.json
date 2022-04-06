@@ -1,0 +1,24 @@
+{
+  "name": "cldrjs",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "1.7.x",
+    "cldr-data": ">=25",
+    "eventEmitter": "4.2.7",
+    "mocha": "1.12.x",
+    "requirejs": "2.1.x",
+    "requirejs-plugins": "1.0.2",
+    "requirejs-text": "2.0.10"
+  },
+  "homepage": "https://github.com/rxaviers/cldrjs",
+  "version": "0.5.5",
+  "_release": "0.5.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.5.5",
+    "commit": "30f5a8f131928dafa07e37069c9617d1007c8799"
+  },
+  "_source": "https://github.com/rxaviers/cldrjs.git",
+  "_target": "^0.5.4",
+  "_originalSource": "cldrjs"
+}

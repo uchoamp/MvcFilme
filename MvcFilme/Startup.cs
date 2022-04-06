@@ -9,6 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MvcFilme.Data;
+using MvcFilme.Models;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace MvcFilme
 {
@@ -33,6 +38,9 @@ namespace MvcFilme
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<MvcFilmeContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MvcFilmeContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +66,16 @@ namespace MvcFilme
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            var defaultCulture = new CultureInfo("pt-BR");
+            var localizationOptions = new RequestLocalizationOptions {
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                SupportedCultures = new List<CultureInfo> { defaultCulture },
+                SupportedUICultures = new List<CultureInfo> { defaultCulture }
+            };
+            app.UseRequestLocalization(localizationOptions);
+
+            SeedData.Initialize(app.ApplicationServices);
         }
     }
 }

@@ -1,56 +1,83 @@
-﻿<!DOCTYPE html>
-<html> 
+﻿<!DOCTYPE html> <html> 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Aplicação Filmes</title>
+    <title>@ViewData["Title"] - Marcos's Movies </title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" /> 
+        <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" /> 
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    <environment exclude="Development"> <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" /> <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Filmes" asp-action="Index" class="navbar-brand">Marcos's Movies</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">Sobre</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contato</a></li>
-                </ul>
-            </div>
+    <nav class="px-5 py-3 navbar navbar-expand-lg navbar-dark bg-dark ">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Marcos's Movies</a>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link @Utilities.IsActive(Html.ViewContext, "Home", "Index")" asp-controller="Home" asp-action="Index">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @Utilities.IsActive(Html.ViewContext, "Filmes", "Index")" asp-controller="Filmes" asp-action="Index">Filmes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @Utilities.IsActive(Html.ViewContext, "Cinemas", "Index")" asp-controller="Cinemas" asp-action="Index">Cinemas</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link @Utilities.IsActive(Html.ViewContext, "Home", "Contact")" asp-controller="Home" asp-action="Contact">Contato</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @Utilities.IsActive(Html.ViewContext, "Home", "About")" asp-controller="Home" asp-action="About">Sobre</a>
+                </li>
+            </ul>
         </div>
     </nav>
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
+    <div class="container-full body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2022 - Marcos's Movies&trade;</p>
-        </footer>
     </div>
+    <footer class=" text-center">
+        <div class="container-fluid bg-dark p-3 text-white footer-content justify-content-center">
+            <a asp-area="" asp-controller="Filmes" asp-action="Index" class="navbar-brand text-white">Marcos's Movies</a>
+            <hr />
+            <p class="px-5">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vulputate, justo quis lobortis fermentum, tortor erat gravida felis, non imperdiet lacus diam sed odio. Donec fringilla, dolor et viverra gravida.
+            </p>
+            <hr />
+            <ul class="list-group list-group-horizontal-xl text-white justify-content-around footer-nav">
+                <li class="">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
+                </li>
+                <li class="">
+                    <a class="nav-link" asp-controller="Filmes" asp-action="Index">Filmes</a>
+                </li>
+                <li class="">
+                    <a class="nav-link" asp-controller="Cinemas" asp-action="Index">Cinemas</a>
+                </li>
+                <li class="">
+                    <a class="nav-link" asp-controller="Home" asp-action="Contact">Contato</a>
+                </li>
+                <li class="">
+                    <a class="nav-link" asp-controller="Home" asp-action="About">Sobre</a>
+                </li>
+            </ul>
+        </div>
+        <!-- Copyright -->
+        <div class="copyright bg-light p-2">
+            <span class="p-1 text-dark text-center">&copy; 2022 - Marcos's Movies&trade;</span>
+        </div>  
+        <!-- Copyright -->
+    </footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">

@@ -1,37 +1,71 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
-for details on configuring this project to bundle and minify static web assets. */
-body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿
+.body-content, .contato-content, .sobre-content, .catalogo-filmes, .filme-detalhes, .novo-filme{
+    min-height: 100vh;
+}
+.footer-nav {
+    padding:0 20vw!important; 
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.home-banner {
+    height: 90vh;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1004%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='rgba(35%2c 35%2c 35%2c 1)'%3e%3c/rect%3e%3cpath d='M97.43 632.92C282.19 626.94 416.03 350.27 777.54 342.8 1139.06 335.33 1280.33 143.31 1457.66 141.2' stroke='rgba(51%2c121%2c194%2c0.58)' stroke-width='2'%3e%3c/path%3e%3cpath d='M413.6 641.63C552.03 614.58 608.16 266.48 830.51 261.51 1052.86 256.54 1038.96 331.51 1247.42 331.51 1455.88 331.51 1558.64 261.75 1664.33 261.51' stroke='rgba(51%2c121%2c194%2c0.58)' stroke-width='2'%3e%3c/path%3e%3cpath d='M283.64 659.11C464.85 657.55 619.38 477.85 984.37 473.69 1349.36 469.53 1501.2 252.39 1685.1 249.69' stroke='rgba(51%2c121%2c194%2c0.58)' stroke-width='2'%3e%3c/path%3e%3cpath d='M121.83 580.85C295.88 580.07 449.51 440.53 803.02 437.02 1156.53 433.51 1304.08 205.1 1484.21 201.82' stroke='rgba(51%2c121%2c194%2c0.58)' stroke-width='2'%3e%3c/path%3e%3cpath d='M606.86 630.41C741.39 572.15 677.11 154.78 943.47 150.25 1209.83 145.72 1444.79 289.51 1616.7 290.25' stroke='rgba(51%2c121%2c194%2c0.58)' stroke-width='2'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1004'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
 }
 
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+.banner-content-left{
+    padding: 4rem 2rem;
+}
+.banner-content-left h1{
+    font-size: 5rem!important;
 }
 
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+.banner-content-right{
+    text-align: justify;
+    padding-bottom: 8rem;
+    padding-right: 2rem;
 }
 
-/* QR code generator */
-#qrCode {
-    margin: 15px;
+.footer-nav li {
+    list-style-type: none;
 }
 
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
+.sobre-content address {
+    font-size: 1.4rem;
 }
+
+.text-justify {
+    text-align: justify;
+}
+.text-indented{
+    text-indent: 3rem;
+}
+
+.filme-detalhes .filme-capa{
+    height: 400px;
+    width: 280px;
+}
+
+.filme-card {
+    width: 280px !important;
+}
+
+.card-img-top.filme-capa {
+    width: 240px;
+    height: 343px;
+    margin: 0 auto;
+}
+
+.btn-actions > *:first-child{
+    margin-right: 2px;
+}
+
+.btn-actions > *:last-child{
+    margin-left: 2px;
+}
+
+
+.invalid-msg {
+    font-size: .8rem;
+}
+
+
+

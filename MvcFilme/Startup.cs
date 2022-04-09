@@ -64,7 +64,7 @@ namespace MvcFilme
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id:guid?}");
             });
 
             var defaultCulture = new CultureInfo("pt-BR");

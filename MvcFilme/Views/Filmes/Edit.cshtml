@@ -1,59 +1,61 @@
 ﻿@model MvcFilme.Models.Filme
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editando " + Model.Titulo;
 }
 
-<h2>Edit</h2>
 
-<h4>Filme</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Lancamento" class="control-label"></label>
-                <input asp-for="Lancamento" class="form-control" />
-                <span asp-validation-for="Lancamento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Genero" class="control-label"></label>
-                <input asp-for="Genero" class="form-control" />
-                <span asp-validation-for="Genero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Preco" class="control-label"></label>
-                <input asp-for="Preco" class="form-control" />
-                <span asp-validation-for="Preco" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Classificacao" class="control-label"></label>
-                <select asp-for="Classificacao" class="form-control" >
-                    <option value="L">Livre</option>
-                    <option value="10">10+</option>
-                    <option value="12">12+</option>
-                    <option value="14">14+</option>
-                    <option value="16">16+</option>
-                    <option value="18">18+</option>
-                </select>
-                <span asp-validation-for="Classificacao" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+<div class="container novo-filme bg-light pt-4 pb-5 ">
+    <div class="row mb-4 px-5">
+        <div class="col">
+            <a asp-action="Index" class="link-secondary p-2">Voltar para o Catálogo</a>
+        </div>
     </div>
-</div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4 border p-3 border-primary rounded">
+            <h2 class="text-center">Novo Filme</h2>
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <hr />
+                <div class="mb-3">
+                    <label asp-for="Titulo" class="form-label"></label>
+                    <input asp-for="Titulo" class="form-control"  placeholder="Interestelar"/>
+                    <span asp-validation-for="Titulo" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Lancamento" class="form-label"></label>
+                    <input asp-for="Lancamento" class="form-control" />
+                    <span asp-validation-for="Lancamento" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Capa" class="form-label"></label>
+                    <input asp-for="Capa" class="form-control"  placeholder="https://example.com" type="url"/>
+                    <span asp-validation-for="Capa" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Genero" class="form-label"></label>
+                    <select asp-for="Genero" asp-items="FilmeViewModel.generos" class="form-select">
+                    </select>
+                    <span asp-validation-for="Genero" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Classificacao" class="form-label"></label>
+                    <select asp-for="Classificacao" asp-items="FilmeViewModel.Classificacoes" class="form-select">
+                    </select>
+                    <span asp-validation-for="Classificacao" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Sinopse" class="form-label"></label>
+                    <textarea class="form-control" asp-for="Sinopse" rows="3"></textarea>
+                    <span asp-validation-for="Sinopse"></span>
+                </div>
+                <div class="d-flex px-5">
+                    <input type="submit" value="Atualizar" class="btn btn-primary w-100 h-100" />
+                </div>
+            </form>
+        </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>
 
 @section Scripts {

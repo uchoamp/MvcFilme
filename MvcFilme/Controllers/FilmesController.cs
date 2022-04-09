@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MvcFilme.Data;
 using MvcFilme.Models;
@@ -20,7 +18,7 @@ namespace MvcFilme.Controllers
         }
 
         // GET: Filmes
-        public async Task<IActionResult> Index(string genero, string busca)
+        public async Task<IActionResult> Index(string genero, string busca, string classificacao)
         {
             IQueryable<string> consultaGenero = from m in _context.Filme orderby m.Genero select m.Genero;
             var filmes = from m in _context.Filme select m;
@@ -30,15 +28,14 @@ namespace MvcFilme.Controllers
             if(!String.IsNullOrEmpty(genero))
                 filmes = filmes.Where(x => x.Genero.Equals(genero));
 
-            var filmeGeneroVM = new FilmeGeneroViewModel();
+            var filmeGeneroVM = new FilmeViewModel();
 
-            filmeGeneroVM.generos = new SelectList(await consultaGenero.Distinct().ToListAsync());
             filmeGeneroVM.filmes = await filmes.ToListAsync(); 
             return View(filmeGeneroVM);
         }
 
         // GET: Filmes/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -46,7 +43,7 @@ namespace MvcFilme.Controllers
             }
 
             var filme = await _context.Filme
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.PublicId == id);
             if (filme == null)
             {
                 return NotFound();
@@ -66,7 +63,7 @@ namespace MvcFilme.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Lancamento,Genero,Preco,Classificacao")] Filme filme)
+        public async Task<IActionResult> Create([Bind("Titulo,Lancamento,Genero,Capa,Classificacao,Sinopse")] Filme filme)
         {
             if (ModelState.IsValid)
             {
@@ -78,14 +75,14 @@ namespace MvcFilme.Controllers
         }
 
         // GET: Filmes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var filme = await _context.Filme.FindAsync(id);
+            var filme = await _context.Filme.FirstOrDefaultAsync(f => f.PublicId == id);
             if (filme == null)
             {
                 return NotFound();
@@ -98,18 +95,20 @@ namespace MvcFilme.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Lancamento,Genero,Preco,Classificacao")] Filme filme)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Titulo,Lancamento,Genero,Capa,Classificacao,Sinopse")] Filme updatedFilme)
         {
-            if (id != filme.Id)
-            {
-                return NotFound();
-            }
+            var filme = await _context.Filme.AsNoTracking().FirstOrDefaultAsync(f => f.PublicId.Equals(id));
 
+            if (filme is null)
+                return NotFound();
+
+            updatedFilme.Id = filme.Id;
+            updatedFilme.PublicId = id;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(filme);
+                    _context.Filme.Update(updatedFilme);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -129,7 +128,7 @@ namespace MvcFilme.Controllers
         }
 
         // GET: Filmes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -137,7 +136,7 @@ namespace MvcFilme.Controllers
             }
 
             var filme = await _context.Filme
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.PublicId.Equals(id));
             if (filme == null)
             {
                 return NotFound();
@@ -149,9 +148,13 @@ namespace MvcFilme.Controllers
         // POST: Filmes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid publicId)
         {
-            var filme = await _context.Filme.FindAsync(id);
+            var filme = await _context.Filme.FirstOrDefaultAsync(f => f.PublicId.Equals(publicId));
+            if (filme == null)
+            {
+                return NotFound();
+            }
             _context.Filme.Remove(filme);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

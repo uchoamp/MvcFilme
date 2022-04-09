@@ -1,70 +1,72 @@
-﻿@model MvcFilme.Models.FilmeGeneroViewModel
+﻿@model MvcFilme.Models.FilmeViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Catálogo de Filmes";
 }
 
-<h2>Index </h2>
+<div class="container bg-light p-3 catalogo-filmes">
+    <h2 class="text-center">Catálogo de Filmes</h2>
+    <div class="row mt-4">
+        <div class="col-10 border rounded p-2">
+            <h5 class="text-center">Filtros</h5>
+            <div class="container-fluid">
+            <form class="container justify-content-around" asp-controller="Filmes" asp-action="Index" method="get">
+                    <div class="row justify-content-around">
+                        <div class="col-4">
+                            <label class="form-label" for="genero">Genêro</label>
+                            <select class="form-select" asp-for="genero" asp-items="FilmeViewModel.generos" name="genero">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" for="classificacao">Classificação</label>
+                            <select class="form-select" asp-for="classificacao" asp-items="FilmeViewModel.Classificacoes" name="classificacao">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" for="busca">Busca por Título</label>
+                            <input class="form-control"type="text" name="busca" placeholder="Titanic" id="busca" />
+                        </div>
+                    </div>
+                    <div class="form-row pt-2 d-flex justify-content-center">
+                        <input class="btn btn-outline-primary w-50" type="submit" value="Filtrar" />
+                    </div>
+            </form>
+            </div>
+        </div>
+        <div class="col-2 p-1 d-flex justify-content-center align-items-center">
+            <a asp-action="Create" class="btn btn-success">Novo Filme</a>
+        </div>
+    </div>
+    <div class="row mt-4 border bg-light rounded px-4 py-2 justify-content-center">
+        @foreach (var filme in Model.filmes)
+        {
+            <div class="card p-2  pt-3 m-2 filme-card">
+                <img class="card-img-top rounded filme-capa" src="@Html.DisplayFor(modelItem => filme.Capa)" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => filme.Titulo)</h5>
+                    <p class="card-text">
+                        <strong>@Html.DisplayNameFor(modelItem => filme.Genero): </strong>
+                        <span>@Html.DisplayFor(modelItem => filme.Genero)</span>
+                        <br>
+                        <strong>@Html.DisplayNameFor(modelItem => filme.Classificacao): </strong>
+                        <span>@Html.DisplayFor(modelItem => filme.Classificacao)</span>
+                    </p>
 
-@Html.DisplayFor(model => model.genero)
-<p>
-    <a asp-action="Create">Create New </a>
-</p>
-<form asp-controller="Filmes" asp-action="Index" method="get">
-    <p>
-        <select asp-for="genero" asp-items="Model.generos" name="genero">
-            <option value="">Todos</option>
-        </select>
-        Title : 
-        <input type="text" name="busca" />
-        <input type="submit" value="Filtrar" />
-    </p>
-</form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.filmes.FirstOrDefault().Titulo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.filmes.FirstOrDefault().Lancamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.filmes.FirstOrDefault().Genero)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.filmes.FirstOrDefault().Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.filmes.FirstOrDefault().Classificacao)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.filmes) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lancamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genero)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Preco)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Classificacao)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <div class="row px-2 mb-1">
+                        <a class="btn btn-warning" asp-action="Details" asp-route-id="@filme.PublicId">Detalhes</a>
+                    </div>
+                    <div class="row px-2 mb-1 btn-actions">
+                        <div class="col p-0">
+                            <a class="btn btn-primary w-100 h-100" asp-action="Edit" asp-route-id="@filme.PublicId">Editar</a>
+                        </div>
+                        <div class="col p-0">
+                            <a class="btn btn-danger w-100 h-100" asp-action="Delete" asp-route-id="@filme.PublicId">Remover</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

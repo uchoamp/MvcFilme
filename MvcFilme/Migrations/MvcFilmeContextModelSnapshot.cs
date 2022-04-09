@@ -19,26 +19,111 @@ namespace MvcFilme.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MvcFilme.Models.Cartaz", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CinemaId");
+
+                    b.Property<int>("FilmeId");
+
+                    b.Property<DateTime>("FimExibicao");
+
+                    b.Property<DateTime>("InicioExibicao");
+
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("Decimal(2,2)");
+
+                    b.Property<Guid>("PublicId")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaId");
+
+                    b.HasIndex("FilmeId");
+
+                    b.ToTable("Cartaz");
+                });
+
+            modelBuilder.Entity("MvcFilme.Models.Cinema", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<Guid>("PublicId")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<int>("UnidadeFederativa");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cinema");
+                });
+
             modelBuilder.Entity("MvcFilme.Models.Filme", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Classificacao");
+                    b.Property<string>("Capa")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
-                    b.Property<string>("Genero");
+                    b.Property<string>("Classificacao")
+                        .IsRequired()
+                        .HasMaxLength(5);
+
+                    b.Property<string>("Genero")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<DateTime>("Lancamento");
 
-                    b.Property<decimal>("Preco")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<Guid>("PublicId")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("Titulo");
+                    b.Property<string>("Sinopse")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PublicId")
+                        .IsUnique();
+
                     b.ToTable("Filme");
+                });
+
+            modelBuilder.Entity("MvcFilme.Models.Cartaz", b =>
+                {
+                    b.HasOne("MvcFilme.Models.Cinema", "Cinema")
+                        .WithMany("Cartazes")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MvcFilme.Models.Filme", "Filme")
+                        .WithMany("Cartazes")
+                        .HasForeignKey("FilmeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

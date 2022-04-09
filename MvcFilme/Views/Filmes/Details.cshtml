@@ -1,48 +1,67 @@
 ﻿@model MvcFilme.Models.Filme
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Titulo;
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Filme</h4>
+<div class="container bg-light p-3 filme-detalhes">
+    <h2 class="text-center">Detalhes - @Html.DisplayFor(model => model.Titulo)</h2>
+    <div class="row bg-white border border-warning p-2 rounded">
+            <div class="col-auto d-flex justify-content-end align-items-center">
+                <img src="@Model.Capa" class="filme-capa rounded" alt="" />
+            </div>
+            <div class="col pt-3">
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Titulo)</dt>
+                    <dd>@Html.DisplayFor(model => model.Titulo)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Genero)</dt>
+                    <dd>@Html.DisplayFor(model => model.Genero)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Classificacao)</dt>
+                    <dd>@Html.DisplayFor(model => model.Classificacao)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Lancamento)</dt>
+                    <dd>@Html.DisplayFor(model => model.Lancamento)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Sinopse)</dt>
+                    <dd class="text-justify text-indented">
+                        @Html.DisplayFor(model => model.Sinopse)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-2 d-flex flex-column justify-content-between">
+                    <a class="btn btn-secondary w-100" asp-action="Index">Catálogo</a>
+                    <a class="btn btn-primary w-100" asp-action="Edit" asp-route-id="@Model.PublicId">Editar</a>
+                    <a class="btn btn-danger w-100" asp-action="Delete" asp-route-id="@Model.PublicId">Remover</a>
+            </div>
+    </div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Lancamento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Lancamento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Genero)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Preco)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Preco)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Classificacao)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Classificacao)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <h3 class="text-center">Cartazes</h3>
+        <div class="border rounded p-2">
+            <h5 class="text-center">Filtros</h5>
+            <div class="container-fluid">
+            <form class="container justify-content-around" asp-controller="Filmes" asp-action="Index" method="get">
+                    <div class="row justify-content-around">
+                        <div class="col-4">
+                            <label class="form-label" for="genero">Genêro</label>
+                            <select class="form-select" asp-for="Genero" asp-items="FilmeViewModel.generos" name="genero">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row pt-2 d-flex justify-content-center">
+                        <input class="btn btn-outline-primary w-50" type="submit" value="Filtrar" />
+                    </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2 border bg-light rounded px-4 py-2 justify-content-center">
+    </div>
 </div>

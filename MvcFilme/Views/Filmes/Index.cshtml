@@ -1,4 +1,4 @@
-﻿@model MvcFilme.Models.FilmeViewModel
+﻿@model FilmesViewModel
 
 @{
     ViewData["Title"] = "Catálogo de Filmes";
@@ -10,37 +10,43 @@
         <div class="col-10 border rounded p-2">
             <h5 class="text-center">Filtros</h5>
             <div class="container-fluid">
-            <form class="container justify-content-around" asp-controller="Filmes" asp-action="Index" method="get">
+                <form class="container justify-content-around" asp-action="Index" method="get">
                     <div class="row justify-content-around">
-                        <div class="col-4">
-                            <label class="form-label" for="genero">Genêro</label>
-                            <select class="form-select" asp-for="genero" asp-items="FilmeViewModel.generos" name="genero">
+                        <div class="col">
+                            <label class="form-label" asp-for="Genero"></label>
+                            <select class="form-select" asp-for="Genero" asp-items="FilmesViewModel.Generos" name="genero">
                                 <option value="">Todos</option>
                             </select>
                         </div>
-                        <div class="col-4">
-                            <label class="form-label" for="classificacao">Classificação</label>
-                            <select class="form-select" asp-for="classificacao" asp-items="FilmeViewModel.Classificacoes" name="classificacao">
+                        <div class="col">
+                            <label class="form-label" asp-for="Classificacao"></label>
+                            <select class="form-select" asp-for="Classificacao" asp-items="FilmesViewModel.Classificacoes">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <label class="form-label" asp-for="AnoLancamento"></label>
+                            <select class="form-select" asp-for="AnoLancamento" asp-items="@Model.AnosLancamento">
                                 <option value="">Todos</option>
                             </select>
                         </div>
-                        <div class="col-4">
-                            <label class="form-label" for="busca">Busca por Título</label>
-                            <input class="form-control"type="text" name="busca" placeholder="Titanic" id="busca" />
+                        <div class="col">
+                            <label class="form-label" asp-for="BuscaTitulo">Busca por Título</label>
+                            <input class="form-control" asp-for="BuscaTitulo"  placeholder="Titanic" />
                         </div>
                     </div>
-                    <div class="form-row pt-2 d-flex justify-content-center">
+                    <div class="row pt-2 d-flex justify-content-center">
                         <input class="btn btn-outline-primary w-50" type="submit" value="Filtrar" />
                     </div>
-            </form>
+                </form>
             </div>
         </div>
-        <div class="col-2 p-1 d-flex justify-content-center align-items-center">
-            <a asp-action="Create" class="btn btn-success">Novo Filme</a>
+        <div class="col-2 p-3 d-flex justify-content-center align-items-center">
+            <a asp-action="Create" class="btn btn-success w-100">Novo Filme</a>
         </div>
     </div>
     <div class="row mt-4 border bg-light rounded px-4 py-2 justify-content-center">
-        @foreach (var filme in Model.filmes)
+        @foreach (var filme in Model.Filmes)
         {
             <div class="card p-2  pt-3 m-2 filme-card">
                 <img class="card-img-top rounded filme-capa" src="@Html.DisplayFor(modelItem => filme.Capa)" alt="Card image cap">

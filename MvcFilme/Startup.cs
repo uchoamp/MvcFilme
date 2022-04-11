@@ -56,7 +56,7 @@ namespace MvcFilme
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
@@ -74,8 +74,6 @@ namespace MvcFilme
                 SupportedUICultures = new List<CultureInfo> { defaultCulture }
             };
             app.UseRequestLocalization(localizationOptions);
-
-            SeedData.Initialize(app.ApplicationServices);
         }
     }
 }

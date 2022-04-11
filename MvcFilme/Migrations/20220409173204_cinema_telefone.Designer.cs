@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcFilme.Data;
 
 namespace MvcFilme.Migrations
 {
     [DbContext(typeof(MvcFilmeContext))]
-    partial class MvcFilmeContextModelSnapshot : ModelSnapshot
+    [Migration("20220409173204_cinema_telefone")]
+    partial class cinema_telefone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,14 +31,12 @@ namespace MvcFilme.Migrations
 
                     b.Property<int>("FilmeId");
 
-                    b.Property<DateTime>("FimExibicao")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("FimExibicao");
 
-                    b.Property<DateTime>("InicioExibicao")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("InicioExibicao");
 
                     b.Property<decimal>("Preco")
-                        .HasColumnType("Decimal(4,2)");
+                        .HasColumnType("Decimal(2,2)");
 
                     b.Property<Guid>("PublicId")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace MvcFilme.Migrations
                         .IsRequired()
                         .HasMaxLength(15);
 
-                    b.Property<byte>("UnidadeFederativa");
+                    b.Property<int>("UnidadeFederativa");
 
                     b.HasKey("Id");
 
@@ -90,14 +90,15 @@ namespace MvcFilme.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<byte>("Classificacao");
+                    b.Property<string>("Classificacao")
+                        .IsRequired()
+                        .HasMaxLength(5);
 
                     b.Property<string>("Genero")
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<DateTime>("Lancamento")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("Lancamento");
 
                     b.Property<Guid>("PublicId")
                         .ValueGeneratedOnAdd()

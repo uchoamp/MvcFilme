@@ -1,0 +1,63 @@
+﻿@model CartazViewModel
+@{
+    ViewData["Title"] = "Editando Cartaz do filme " + Model.Cartaz.Filme.Titulo + " no cinema " + Model.Cartaz.Cinema.Nome + " de " + Model.Cartaz.Cinema.Cidade;
+}
+
+<div class="container editar-cartaz bg-light pt-4 pb-5 ">
+    <div class="row mb-4 px-5 d-flex justify-content-between">
+        <div class="col-auto">
+            <a asp-controller="Filmes" asp-action="Index" class="link-secondary p-2">Ir para o catálogo de filmes</a>
+        </div>
+        <div class="col-auto">
+            <a asp-controller="Cinemas" asp-action="Index" class="link-secondary p-2">Ir para a lista de cinemas</a>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4 border p-3 border-primary rounded">
+            <h3 class="text-center">Editar Cartaz</h3>
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <hr />
+                <div class="mb-3">
+                    <label asp-for="FilmePublicId" class="form-label"></label>
+                    <select asp-for="FilmePublicId" asp-items="@Model.Filmes" class="form-select">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="FilmePublicId" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CinemaPublicId" class="form-label"></label>
+                    <select asp-for="CinemaPublicId" asp-items="@Model.Cinemas" class="form-select">
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="CinemaPublicId" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="InicioExibicao" class="form-label"></label>
+                    <input asp-for="InicioExibicao" class="form-control"/>
+                    <span asp-validation-for="InicioExibicao" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="FimExibicao" class="form-label"></label>
+                    <input asp-for="FimExibicao" class="form-control" />
+                    <span asp-validation-for="FimExibicao" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Preco" class="form-label"></label>
+                    <input asp-for="Preco" class="form-control"/>
+                    <span asp-validation-for="Preco" class="text-danger invalid-msg"></span>
+                </div>
+                <div class="d-flex px-5">
+                    <input type="submit" value="Atualizar" class="btn btn-primary w-100 h-100" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+

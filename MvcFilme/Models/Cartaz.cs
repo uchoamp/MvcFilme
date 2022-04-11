@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,17 +14,17 @@ namespace MvcFilme.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]   
         public Guid PublicId { get; set; }   
         
-        [Range(1,100)]
+        [Range(1,99)]
         [DisplayName("Preço")]
         [DataType(DataType.Currency)]
-        [Column(TypeName = "Decimal(2,2)")]
-        public decimal Preco { get; set; }
+        [Column(TypeName = "Decimal(4,2)")]
+        public decimal? Preco { get; set; }
 
-        [DataType(DataType.DateTime), DisplayName("Inicio da Exibição")]
-        public DateTime InicioExibicao { get; set; }
+        [Column(TypeName = "Date"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false),DisplayName("Inicio da Exibição")]
+        public DateTime? InicioExibicao { get; set; }
         
-        [DataType(DataType.DateTime), DisplayName("Fim da Exibição")]
-        public DateTime FimExibicao { get; set; }
+        [Column(TypeName = "Date"), DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false), DisplayName("Fim da Exibição")]
+        public DateTime? FimExibicao { get; set; }
 
         [Required]
         [DisplayName("Filme")]
@@ -35,5 +36,6 @@ namespace MvcFilme.Models
 
         public Filme Filme { get; set; }
         public Cinema Cinema { get; set; }
+
     }
 }

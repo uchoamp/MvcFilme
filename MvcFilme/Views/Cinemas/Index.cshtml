@@ -1,7 +1,103 @@
-﻿@{
+﻿@model CinemasViewModel
+@{
+    ViewData["Title"] = "Cinemas";
 }
 
-
-<h1>
-    Cinemas
-</h1>
+<div class="container bg-light p-3 lista-cinemas">
+    <h2 class="text-center">Lista de Cinemas</h2>
+    <div class="row mt-4">
+        <div class="col-10 border rounded p-2">
+            <h5 class="text-center">Filtros</h5>
+            <div class="container-fluid">
+                <form class="container justify-content-around" asp-action="Index" method="get">
+                    <div class="row justify-content-around align-items-center">
+                        <div class="col-4">
+                            <label class="form-label" asp-for="Cidade"></label>
+                            <select class="form-select" asp-for="Cidade" asp-items="CinemasViewModel.Cidades">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label" asp-for="Estado"></label>
+                            <select class="form-select" asp-for="Estado" asp-items="CinemasViewModel.Estados">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row pt-2 d-flex justify-content-center">
+                        <input class="btn btn-outline-primary w-50" type="submit" value="Filtrar"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-2 p-3 d-flex justify-content-center align-items-center">
+            <a asp-action="Create" class="btn btn-success w-100">Adicionar Cinema</a>
+        </div>
+    </div>
+    <div class="row mt-4 border bg-light rounded px-4 py-2 justify-content-center">
+        <table class="table table-striped w-100">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        #
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Cinemas.FirstOrDefault().Nome) 
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Cinemas.FirstOrDefault().Cidade) 
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Cinemas.FirstOrDefault().UnidadeFederativa) 
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Cinemas.FirstOrDefault().Telefone) 
+                    </th>
+                    <th scope="col">
+                        @Html.DisplayNameFor(model => model.Cinemas.FirstOrDefault().QuantidadeFilmesEmCartaz) 
+                    </th>
+                    <th scope="col" class="px-5">
+                        Ações
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(int i = 0; i < Model.Cinemas.Count; i++){
+                <tr>
+                    <th scope="row">@(i+1)</th>
+                    <td>
+                        @Html.DisplayFor(_ => Model.Cinemas[i].Nome) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => Model.Cinemas[i].Cidade) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => Model.Cinemas[i].UnidadeFederativa) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => Model.Cinemas[i].Telefone) 
+                    </td>
+                    <td>
+                        @Html.DisplayFor(_ => Model.Cinemas[i].QuantidadeFilmesEmCartaz) 
+                    </td>
+                    <td>
+                        <div class="container-fluid">
+                            <div class="row justify-content-around">
+                                <div class="col text-center">
+                                    <a asp-action="Details" class="link-warning w-100" asp-route-id="@Model.Cinemas[i].PublicId">Detalhes</a>
+                                </div>
+                                <div class="col text-center">
+                                    <a asp-action="Edit" class="link-primary w-100" asp-route-id="@Model.Cinemas[i].PublicId">Editar</a>
+                                </div>
+                                <div class="col text-center">
+                                    <a asp-action="Delete" class="link-danger w-100" asp-route-id="@Model.Cinemas[i].PublicId">Remover</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

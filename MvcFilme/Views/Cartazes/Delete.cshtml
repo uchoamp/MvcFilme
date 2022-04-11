@@ -1,0 +1,61 @@
+﻿@model Cartaz 
+
+@{
+    ViewData["Title"] = "Deseja remover o cartaz?";
+}
+
+<div class="container bg-light p-4 remover-cartaz">
+    <h2 class="text-center">Você relamente deseja remover esse cartaz?</h2>
+    <div class="row d-flex justify-content-center">
+        <div class="col-5 bg-white border mt-4 border-danger p-3 rounded">
+            <h3 class="text-center">Remover</h3>
+            <div class="row pt-3">
+                <dl>
+                    <dt>
+                        Filme @Html.DisplayNameFor(model => model.Filme.Titulo)
+                    </dt>
+                    <dd>
+                        <a asp-action="Details" asp-controller="Filmes" asp-route-id="@Model.Filme.PublicId" class="link-secondary">
+                            @Html.DisplayFor(model => model.Filme.Titulo) - @Html.DisplayFor(model => model.Filme.Lancamento)
+                        </a>
+                    </dd>
+                    <dt>Cinema @Html.DisplayNameFor(model => model.Cinema.Nome)</dt>
+                    <dd>
+                        <a asp-action="Details" asp-controller="Cinemas" asp-route-id="@Model.Cinema.PublicId" class="link-secondary">
+                            @Html.DisplayFor(model => model.Cinema.Nome) - @Html.DisplayFor(model => model.Cinema.Cidade)
+                        </a>
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.InicioExibicao)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.InicioExibicao)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FimExibicao)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FimExibicao)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Preco)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Preco)
+                    </dd>
+                </dl>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-secondary mb-2 w-100" asp-action="Index" asp-controller="Cinemas">Lista de Cinemas</a>
+                </div>
+                <div class="col">
+                    <form asp-action="Delete" class="w-100 p-0">
+                        <input type="hidden" asp-for="PublicId" />
+                        <input type="submit" class="btn btn-danger w-100" value="Confirmar" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

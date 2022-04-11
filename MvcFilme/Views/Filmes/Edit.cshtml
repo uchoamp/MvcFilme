@@ -1,11 +1,11 @@
-﻿@model MvcFilme.Models.Filme
+﻿@model Filme
 
 @{
     ViewData["Title"] = "Editando " + Model.Titulo;
 }
 
 
-<div class="container novo-filme bg-light pt-4 pb-5 ">
+<div class="container editar-filme bg-light pt-4 pb-5 ">
     <div class="row mb-4 px-5">
         <div class="col">
             <a asp-action="Index" class="link-secondary p-2">Voltar para o Catálogo</a>
@@ -13,13 +13,15 @@
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-md-4 border p-3 border-primary rounded">
-            <h2 class="text-center">Novo Filme</h2>
+            <h3 class="text-center">@Model.Titulo</h3>
+            <h6 class="text-center">Editar</h6>
+            <hr />
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <hr />
+                <input type="hidden" asp-for="PublicId" />
                 <div class="mb-3">
                     <label asp-for="Titulo" class="form-label"></label>
-                    <input asp-for="Titulo" class="form-control"  placeholder="Interestelar"/>
+                    <input asp-for="Titulo" class="form-control" placeholder="Interestelar" />
                     <span asp-validation-for="Titulo" class="text-danger invalid-msg"></span>
                 </div>
                 <div class="mb-3">
@@ -29,18 +31,18 @@
                 </div>
                 <div class="mb-3">
                     <label asp-for="Capa" class="form-label"></label>
-                    <input asp-for="Capa" class="form-control"  placeholder="https://example.com" type="url"/>
+                    <input asp-for="Capa" class="form-control" placeholder="https://example.com" type="url" />
                     <span asp-validation-for="Capa" class="text-danger invalid-msg"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="Genero" class="form-label"></label>
-                    <select asp-for="Genero" asp-items="FilmeViewModel.generos" class="form-select">
+                    <select asp-for="Genero" asp-items="FilmesViewModel.Generos" class="form-select">
                     </select>
                     <span asp-validation-for="Genero" class="text-danger invalid-msg"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="Classificacao" class="form-label"></label>
-                    <select asp-for="Classificacao" asp-items="FilmeViewModel.Classificacoes" class="form-select">
+                    <select asp-for="Classificacao" asp-items="FilmesViewModel.Classificacoes" class="form-select">
                     </select>
                     <span asp-validation-for="Classificacao" class="text-danger invalid-msg"></span>
                 </div>
@@ -59,5 +61,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

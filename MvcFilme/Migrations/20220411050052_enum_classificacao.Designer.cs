@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcFilme.Data;
 
 namespace MvcFilme.Migrations
 {
     [DbContext(typeof(MvcFilmeContext))]
-    partial class MvcFilmeContextModelSnapshot : ModelSnapshot
+    [Migration("20220411050052_enum_classificacao")]
+    partial class enum_classificacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

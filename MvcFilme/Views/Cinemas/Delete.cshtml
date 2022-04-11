@@ -1,0 +1,48 @@
+﻿@model Cinema
+
+@{
+    ViewData["Title"] = "Deseja remover o cinema " + Model.Nome + "?";
+}
+
+<div class="container bg-light p-5 remover-cinema">
+    <h2 class="text-center">Você relamente deseja apagar o cinema @Html.DisplayFor(model => model.Nome)?</h2>
+    <div class="row d-flex justify-content-center">
+        <div class="col-5 bg-white border mt-4 border-danger p-3 rounded">
+            <h3 class="text-center">@Model.Nome</h3>
+            <h6 class="text-center">Remover</h6>
+            <div class="row pt-3">
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Nome)</dt>
+                    <dd>@Html.DisplayFor(model => model.Nome)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cidade)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cidade)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.UnidadeFederativa)</dt>
+                    <dd>@Html.DisplayFor(model => model.UnidadeFederativa)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Telefone)</dt>
+                    <dd>@Html.DisplayFor(model => model.Telefone)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.QuantidadeCartazes)</dt>
+                    <dd>@Html.DisplayFor(model => model.QuantidadeCartazes)</dd>
+                </dl>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-secondary mb-2 w-100" asp-action="Index">Lista de Cinemas</a>
+                </div>
+                <div class="col">
+                    <form asp-action="Delete" class="w-100 p-0">
+                        <input type="hidden" asp-for="PublicId" />
+                        <input type="submit" class="btn btn-danger w-100" value="Confirmar" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

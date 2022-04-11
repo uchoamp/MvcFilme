@@ -1,46 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
+using MvcFilme.Data;
 
 namespace MvcFilme.Models
 {
+    public static class EnumExtension 
+    {
+        public static string GetEnumDisplayName(this Enum u)
+        {
+            return ((DisplayAttribute)u.GetType().GetMember(u.ToString())
+            .First().GetCustomAttributes(typeof(DisplayAttribute), false).First()).Name;
+        }
+    }
     public class FilmeViewModel
     {
-        public List<Filme> filmes;
-        public string genero { get; set; }
-        public string classificacao { get; set; }
 
-        public static List<SelectListItem> generos { get; } = new List<SelectListItem>
-        {
-            new SelectListItem { Value="Ação", Text="Ação"},
-            new SelectListItem { Value="Aventura", Text="Aventura"},
-            new SelectListItem { Value="Comédia", Text="Comédia"},
-            new SelectListItem { Value="Comédia de ação", Text="Comédia de ação"},
-            new SelectListItem { Value="Comédia dramática", Text="Comédia dramática"},
-            new SelectListItem { Value="Comédia romântica", Text="Comédia romântica"},
-            new SelectListItem { Value="Dança", Text="Dança"},
-            new SelectListItem { Value="Documentário", Text="Documentário"},
-            new SelectListItem { Value="Drama", Text="Drama"},
-            new SelectListItem { Value="Espionagem", Text="Espionagem"},
-            new SelectListItem { Value="Faroeste", Text="Faroeste"},
-            new SelectListItem { Value="Fantasia", Text="Fantasia"},
-            new SelectListItem { Value="Ficção científica", Text="Ficção científica"},
-            new SelectListItem { Value="Guerra", Text="Guerra"},
-            new SelectListItem { Value="Mistério", Text="Mistério"},
-            new SelectListItem { Value="Musical", Text="Musical"},
-            new SelectListItem { Value="Policial", Text="Policial"},
-            new SelectListItem { Value="Romance", Text="Romance"},
-            new SelectListItem { Value="Terror", Text="Terror"},
-            new SelectListItem { Value="Thriller", Text="Thriller"}
-        };
+        [DisplayName("Filme")]
+        public Filme Filme { get; set; }
+        public List<Cartaz> Cartazes { get; set; }
 
-        public static List<SelectListItem> Classificacoes { get; } = new List<SelectListItem>
+        [DisplayName("Apenas em Cartaz")]
+        public bool ApenasEmCartaz { get; set; } = true;
+
+        public List<SelectListItem> CinemaNomes { get; private set; }
+
+        public List<SelectListItem> CinemaCidades { get; private set; }
+
+        public List<SelectListItem> CinemaEstados { get; private set; }
+
+        [DisplayName("Cinema")]
+        public string CinemaNome { get; set; }
+
+        [DisplayName("Cidade")]
+        public string CinemaCidade { get; set; }
+
+        [DisplayName("Estado")]
+        public UnidadesFederativas? CinemaEstado { get; set; }
+
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}"), DisplayName("Inicio da Exibição")]
+        public DateTime? InicioExibicao { get; set; }
+
+        [DataType(DataType.Date), DisplayName("Fim da Exibição")]
+        public DateTime? FimExibicao { get; set; }
+
+        public async Task SetSelectListItems(MvcFilmeContext context)
         {
-            new SelectListItem { Value="L", Text="Livre"},
-            new SelectListItem { Value="10", Text="10" },
-            new SelectListItem { Value="12", Text="12" },
-            new SelectListItem { Value="14", Text="14" },
-            new SelectListItem { Value="16", Text="16" },
-            new SelectListItem { Value="18", Text="18" }
-        };
+            var hoje = DateTime.Now;
+            var baseQuery =  context.Cartaz.Where(ca => ca.FilmeId == Filme.Id)
+                .Where(c => !ApenasEmCartaz || c.FimExibicao >= hoje);
+
+            CinemaNomes = await baseQuery.Select(c => new SelectListItem { Text = c.Cinema.Nome, Value = c.Cinema.Nome }).Distinct().OrderBy(si => si.Value).ToListAsync();
+            CinemaCidades = await baseQuery.Select(c => new SelectListItem { Text = c.Cinema.Cidade, Value = c.Cinema.Cidade }).Distinct().OrderBy(si => si.Value).ToListAsync();
+            CinemaEstados = await baseQuery.Select(c => new SelectListItem { Text = ((int)c.Cinema.UnidadeFederativa).ToString(), Value = c.Cinema.UnidadeFederativa.GetEnumDisplayName() }).Distinct().OrderBy(si => si.Value).ToListAsync();
+        }
     }
 }

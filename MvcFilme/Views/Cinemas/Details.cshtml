@@ -1,0 +1,192 @@
+﻿@model CinemaViewModel 
+
+@{
+    ViewData["Title"] = "Cinema "+ Model.Cinema.Nome; 
+}
+
+<div class="container-fluid bg-light p-4 detalhes-cinema">
+    <h3 class="text-center">Detalhes - Cinema @Html.DisplayFor(model => model.Cinema.Nome)</h3>
+    <div class="row d-flex border mt-4 justify-content-center">
+        <div class="col-6 bg-white border my-4 border-warning px-3 py-1 rounded">
+            <div class="row pt-3">
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.Nome)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.Nome)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.Cidade)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.Cidade)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.UnidadeFederativa)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.UnidadeFederativa)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.Telefone)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.Telefone)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.QuantidadeFilmesEmCartaz)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.QuantidadeFilmesEmCartaz)</dd>
+                </dl>
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => model.Cinema.QuantidadeCartazes)</dt>
+                    <dd>@Html.DisplayFor(model => model.Cinema.QuantidadeCartazes)</dd>
+                </dl>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <a class="btn btn-secondary w-100" asp-action="Index">Lista de Cinemas</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-primary w-100" asp-action="Edit" asp-route-id="@Model.Cinema.PublicId">Editar</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-danger w-100" asp-action="Delete" asp-route-id="@Model.Cinema.PublicId">Remover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="container-fluid" id="cartazes">
+        <h3 class="text-center">Cartazes</h3>
+        <div class="row mt-4">
+            <div class="col-10 border rounded p-2">
+                <h5 class="text-center">Filtros</h5>
+                <form class="container justify-content-around" asp-fragment="cartazes" method="get">
+                    <div class="row justify-content-around">
+                        <div class="row mb-1">
+                            <div class="col">
+                                <label class="form-label" asp-for="FilmeTitulo"></label>
+                                <input asp-for="FilmeTitulo" class="form-control" placeholder="Mad Max" />
+                            </div>
+                            <div class="col">
+                                <label class="form-label" asp-for="FilmeGenero"></label>
+                                <select class="form-select" asp-for="FilmeGenero" asp-items="@Model.FilmeGeneros">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" asp-for="FilmeClassificacao"></label>
+                                <select class="form-select" asp-for="FilmeClassificacao" asp-items="@Model.FilmeClassificacoes">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" asp-for="FilmeAnoLancamento"></label>
+                                <select class="form-select" asp-for="FilmeAnoLancamento" asp-items="@Model.FilmeAnosLancamento">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <label asp-for="ApenasEmCartaz" class="form-label"></label>
+                                <div class="w-100 d-flex justify-content-center pt-2">
+                                    <input class="form-check-input" asp-for="ApenasEmCartaz" type="checkbox"/>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" asp-for="InicioExibicao"></label>
+                                <input class="form-control" asp-for="InicioExibicao" />
+                            </div>
+                            <div class="col">
+                                <label class="form-label" asp-for="FimExibicao"></label>
+                                <input class="form-control" asp-for="FimExibicao" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-2 d-flex justify-content-center">
+                        <input class="btn btn-outline-primary w-50" type="submit" value="Filtrar" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-2 p-3 d-flex justify-content-center align-items-center">
+                <a asp-controller="Cartazes" asp-action="Create" asp-route-CinemaPublicId="@Model.Cinema.PublicId" class="btn btn-success w-100">Novo Cartaz</a>
+            </div>
+        </div>
+        <div class="col-2">
+        </div>
+        <div class="row mt-2 border bg-light rounded px-4 py-2 justify-content-center">
+            <table class="table table-striped w-100">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            #
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.Cartazes.FirstOrDefault().Filme.Titulo)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.FilmeGenero)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.FilmeClassificacao)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.Cartazes.FirstOrDefault().Filme.Lancamento)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.Cartazes.FirstOrDefault().InicioExibicao)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.Cartazes.FirstOrDefault().FimExibicao)
+                        </th>
+                        <th scope="col">
+                             @Html.DisplayNameFor(m => m.Cartazes.FirstOrDefault().Preco)
+                        </th>
+                        <th scope="col">
+                            Ações
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(int i = 0; i < Model.Cartazes.Count; i++)
+                    {
+                        <tr>
+                            <th scope="row">
+                                @(i+1)
+                            </th>
+                            <td>
+                                <a class="link-secondary" asp-controller="Filmes" asp-action="Details" asp-route-id="@Model.Cartazes[i].Filme.PublicId" >@Html.DisplayFor(_ => Model.Cartazes[i].Filme.Titulo)</a> 
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].Filme.Genero)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].Filme.Classificacao)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].Filme.Lancamento)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].InicioExibicao)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].FimExibicao)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(_ => Model.Cartazes[i].Preco)
+                            </td>
+                            <td>
+                                <div class="container-fluid">
+                                    <div class="row justify-content-around">
+                                        <div class="col text-center">
+                                            <a  asp-controller="Cartazes" asp-action="Details" class="link-warning w-100" asp-route-id="@Model.Cartazes[i].PublicId">Detalhes</a>
+                                        </div>
+                                        <div class="col text-center">
+                                            <a  asp-controller="Cartazes" asp-action="Edit" class="link-primary w-100" asp-route-id="@Model.Cartazes[i].PublicId">Editar</a>
+                                        </div>
+                                        <div class="col text-center">
+                                            <a  asp-controller="Cartazes" asp-action="Delete" class="link-danger w-100" asp-route-id="@Model.Cartazes[i].PublicId">Remover</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

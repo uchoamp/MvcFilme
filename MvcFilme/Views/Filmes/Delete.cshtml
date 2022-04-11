@@ -1,9 +1,9 @@
-﻿@model MvcFilme.Models.Filme
+﻿@model Filme
 
 @{
     ViewData["Title"] = "Deseja remover " + Model.Titulo + "?";
 }
-<div class="container bg-light p-5 filme-detalhes">
+<div class="container bg-light p-5 remover-filme">
     <h2 class="text-center">Você relamente deseja apagar @Html.DisplayFor(model => model.Titulo)?</h2>
     <div class="row d-flex justify-content-center">
 

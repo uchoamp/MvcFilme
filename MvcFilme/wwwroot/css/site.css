@@ -1,7 +1,13 @@
 ﻿
-.body-content, .contato-content, .sobre-content, .catalogo-filmes, .filme-detalhes, .novo-filme{
+.body-content, .contato-content, 
+.sobre-content, .catalogo-filmes, 
+.detalhes-filme, .novo-filme, .editar-filme, .remover-filme,
+.lista-cinemas, .adicionar-cinema, .editar-cinema, .remover-cinema, .cinema-detalhes
+.criar-cartaz, .editar-cartaz, .remover-cartaz, .cinema-cartaz
+{
     min-height: 100vh;
 }
+
 .footer-nav {
     padding:0 20vw!important; 
 }
@@ -39,7 +45,7 @@
     text-indent: 3rem;
 }
 
-.filme-detalhes .filme-capa{
+.detalhes-filme .filme-capa, .remover-filme .filme-capa{
     height: 400px;
     width: 280px;
 }
@@ -67,5 +73,6 @@
     font-size: .8rem;
 }
 
-
-
+table th {
+    text-align: center;
+}

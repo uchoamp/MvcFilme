@@ -6,61 +6,61 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcFilme.Models
 {
-    public enum UnidadesFederativas 
+    public enum UnidadesFederativas: byte
     {
-        [DisplayName("Acre")]
+        [Display(Name = "Acre")]
         AC,
-        [DisplayName("Alagoas")]
+        [Display(Name = "Alagoas")]
         AL,
-        [DisplayName("Amapá")]
+        [Display(Name = "Amapá")]
         AP,
-        [DisplayName("Amazonas")]
+        [Display(Name = "Amazonas")]
         AM,
-        [DisplayName("Bahia")]
+        [Display(Name = "Bahia")]
         BA,
-        [DisplayName("Ceará")]
+        [Display(Name = "Ceará")]
         CE,
-        [DisplayName("Distrito Federal")]
+        [Display(Name = "Distrito Federal")]
         DF,
-        [DisplayName("Espirito Santo")]
+        [Display(Name = "Espirito Santo")]
         ES,
-        [DisplayName("Goiás")]
+        [Display(Name = "Goiás")]
         GO,
-        [DisplayName("Maranhão")]
+        [Display(Name = "Maranhão")]
         MA,
-        [DisplayName("Mato Grosso")]
+        [Display(Name = "Mato Grosso")]
         MT,
-        [DisplayName("Mato Grosso do Sul")]
+        [Display(Name = "Mato Grosso do Sul")]
         MS,
-        [DisplayName("Minas Gerais")]
+        [Display(Name = "Minas Gerais")]
         MG,
-        [DisplayName("Pará")]
+        [Display(Name = "Pará")]
         PA,
-        [DisplayName("Paraiba")]
+        [Display(Name = "Paraiba")]
         PB,
-        [DisplayName("Paraná")]
+        [Display(Name = "Paraná")]
         PR,
-        [DisplayName("Pernambuco")]
+        [Display(Name = "Pernambuco")]
         PE,
-        [DisplayName("Piauí")]
+        [Display(Name = "Piauí")]
         PI,
-        [DisplayName("Rio de Janeiro")]
+        [Display(Name = "Rio de Janeiro")]
         RJ,
-        [DisplayName("Rio Grande do Norte")]
+        [Display(Name = "Rio Grande do Norte")]
         RN,
-        [DisplayName("Rio Grande do Sul")]
+        [Display(Name = "Rio Grande do Sul")]
         RS,
-        [DisplayName("Rondônia")]
+        [Display(Name = "Rondônia")]
         RO,
-        [DisplayName("Roraima")]
+        [Display(Name = "Roraima")]
         RR,
-        [DisplayName("Santa Catarina")]
+        [Display(Name = "Santa Catarina")]
         SC,
-        [DisplayName("São Paulo")]
+        [Display(Name = "São Paulo")]
         SP,
-        [DisplayName("Sergipe")]
+        [Display(Name = "Sergipe")]
         SE,
-        [DisplayName("Tocantis")]
+        [Display(Name = "Tocantis")]
         TO
     }
 
@@ -75,17 +75,30 @@ namespace MvcFilme.Models
 
         [DisplayName("Nome")]
         [StringLength(255)]
-        [Required(ErrorMessage = "O campo não pode ser vazio")]
+        [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
         public string Nome { get; set; }
+
+        [DisplayName("Telefone")]
+        [StringLength(15), Required(ErrorMessage = "O campo {0} não pode ser vazio"), DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\([1-9]{2}\) \d{4}-\d{4}$", ErrorMessage = "O telefone deve está no formato (xx) xxxx-xxxx")]
+        public string Telefone { get; set; }
 
         [StringLength(100, MinimumLength = 4)]
         [Required]
         public string Cidade { get; set; }
 
-        [DisplayName("UF")]
-        [Required]
+        [DisplayName("Estado")]
+        [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
         public UnidadesFederativas UnidadeFederativa { get; set; }
 
-        public List<Cartaz> Cartazes { get; set; } 
+        [DisplayName("Quantidade de Filmes em Cartaz")]
+        [NotMapped]
+        public int QuantidadeFilmesEmCartaz { get; set; } = 0;
+
+        [DisplayName("Quantidade de Cartazes")]
+        [NotMapped]
+        public int QuantidadeCartazes { get; set; } = 0;
+
+        public List<Cartaz> Cartazes { get; set; }
     }
 }

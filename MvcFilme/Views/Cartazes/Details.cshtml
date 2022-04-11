@@ -1,0 +1,62 @@
+﻿@model Cartaz
+
+@{
+    ViewData["Title"] = "Cartaz " + Model.Filme.Titulo + " - " + Model.Cinema.Nome + " de " + Model.Cinema.Cidade;
+}
+
+<div class="container bg-light p-4 detalhes-cinema">
+    <h3 class="text-center">Detalhes - Cartaz @Model.Filme.Titulo</h3>
+    <div class="row d-flex border mt-4 justify-content-center">
+        <div class="col-6 bg-white border mt-2 border-warning p-3 rounded">
+            <div class="row pt-3">
+                <dl>
+                    <dt>
+                        Filme
+                    </dt>
+                    <dd>
+                        <a asp-action="Details" asp-controller="Filmes" asp-route-id="@Model.Filme.PublicId" class="link-secondary">
+                            @Html.DisplayFor(model => model.Filme.Titulo) - @Html.DisplayFor(model => model.Filme.Lancamento.Year)
+                        </a>
+                    </dd>
+                    <dt>
+                        Cinema 
+                    </dt>
+                    <dd>
+                        <a asp-action="Details" asp-controller="Cinemas" asp-route-id="@Model.Cinema.PublicId" class="link-secondary">
+                            @Html.DisplayFor(model => model.Cinema.Nome) - @Html.DisplayFor(model => model.Cinema.Cidade)
+                        </a>
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.InicioExibicao)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.InicioExibicao)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.FimExibicao)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FimExibicao)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Preco)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Preco)
+                    </dd>
+                </dl>
+            </div>
+            <div class="row mb-2">
+                <div class="col">
+                    <a class="btn btn-secondary w-100" asp-action="Index" asp-controller="Cinemas">Lista de Cinemas</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-primary w-100" asp-action="Edit" asp-route-id="@Model.PublicId">Editar</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-danger w-100" asp-action="Delete" asp-route-id="@Model.PublicId">Remover</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

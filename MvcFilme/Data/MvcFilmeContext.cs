@@ -8,6 +8,7 @@ namespace MvcFilme.Data
         public DbSet<Filme> Filme { get; set; }
         public DbSet<Cinema> Cinema { get; set; }
         public DbSet<Cartaz> Cartaz { get; set; }
+
         public MvcFilmeContext (DbContextOptions<MvcFilmeContext> options)
             : base(options)
         {

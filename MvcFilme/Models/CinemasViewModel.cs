@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
+using MvcFilme.Utils;
 
 namespace MvcFilme.Models
 {
@@ -27,6 +28,11 @@ namespace MvcFilme.Models
 
         public List<Cinema> Cinemas { get; set; }
 
+
+        /// <summary>
+        /// Atualiza a select lista das cidades
+        /// </summary>
+        /// <param name="context">Contexto do banco de dados</param>
         public static async Task UpdateCidades(MvcFilmeContext context)
         {
             Cidades = await context.Cinema.OrderBy(c => c.Cidade).Select(c => new SelectListItem

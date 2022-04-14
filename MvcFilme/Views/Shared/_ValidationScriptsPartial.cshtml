@@ -2,11 +2,17 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
+
+    <!-- cldr scripts (needed for globalize) -->
+    <script src="~/lib/cldrjs/dist/cldr.js"></script>
+    <script src="~/lib/cldrjs/dist/cldr/event.js"></script>
+    <script src="~/lib/cldrjs/dist/cldr/supplemental.js"></script>
+
     <!-- globalize scripts --> 
     <script  src="~/lib/globalize/dist/globalize.js"> </script> 
     <script  src="~/lib/globalize/dist/globalize/number.js"> </script> 
-    <script  src="~/lib/globalize/dist/globalize/date.js"> </script>
-
+    <script  src="~/lib/globalize/dist/globalize/date.js"> </script> 
+    <script  src="~/lib/globalize/dist/globalize/currency.js"> </script> 
 
     <script  src="~/lib/jquery-validation-globalize/jquery.validate.globalize.js"> </script>
 </environment>
@@ -24,3 +30,26 @@
             integrity="sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds">
     </script>
 </environment>
+
+<script type="text/javascript">
+    const culture = "pt";
+    $.when(
+        $.get("/lib/cldr-core/supplemental/likelySubtags.json"),
+        $.get("/lib/cldr-numbers-modern/main/" + culture + "/numbers.json"),
+        $.get("/lib/cldr-core/supplemental/numberingSystems.json"),
+        $.get("/lib/cldr-dates-modern/main/" + culture + "/ca-gregorian.json"),
+        $.get("/lib/cldr-dates-modern/main/" + culture + "/dateFields.json"),
+        $.get("/lib/cldr-dates-modern/main/" + culture +"/timeZoneNames.json"),
+        $.get("/lib/cldr-core/supplemental/timeData.json"),
+        $.get("/lib/cldr-core/supplemental/weekData.json")
+    ).then(function () {
+        // Normalize $.get results, we only need the JSON, not the request statuses.
+        return [].slice.apply(arguments, [0]).map(function (result) {
+            return result[0];
+        });
+    }).then(Globalize.load).then(function () {
+        Globalize.locale("pt");
+    });
+</script>
+
+<script src="~/js/validation.js" asp-append-version="true"></script>

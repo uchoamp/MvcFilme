@@ -76,3 +76,7 @@
 table th {
     text-align: center;
 }
+
+.card-title {
+    height: 3rem;
+}

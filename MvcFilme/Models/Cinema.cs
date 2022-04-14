@@ -64,14 +64,8 @@ namespace MvcFilme.Models
         TO
     }
 
-    public class Cinema
+    public class Cinema: BaseModelPersistence
     {
-
-        [Key]
-        public int Id { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid PublicId { get; set; }
 
         [DisplayName("Nome")]
         [StringLength(255)]
@@ -99,6 +93,6 @@ namespace MvcFilme.Models
         [NotMapped]
         public int QuantidadeCartazes { get; set; } = 0;
 
-        public List<Cartaz> Cartazes { get; set; }
+        public virtual List<Cartaz> Cartazes { get; set; }
     }
 }

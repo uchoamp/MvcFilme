@@ -6,10 +6,54 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcFilme.Models
 {
+    public enum GenerosFilme: ushort
+    {
+        [Display(Name = "Ação")]
+        ACAO,
+        [Display(Name = "Aventura")]
+        AVENTURA, 
+        [Display(Name = "Comédia")]
+        COMEDIA, 
+        [Display(Name = "Comédia de ação")]
+        COMEDIA_DE_ACAO, 
+        [Display(Name = "Comédia romântica")]
+        COMEDIA_ROMANTICA, 
+        [Display(Name = "Dança")]
+        DANCA, 
+        [Display(Name = "Documentário")]
+        DOCUMENTARIO, 
+        [Display(Name = "Drama")]
+        DRAMA, 
+        [Display(Name = "Espionagem")]
+        ESPIONAGEM, 
+        [Display(Name = "Faroeste")]
+        FAROESTE, 
+        [Display(Name = "Fantasia")]
+        FANTASIA, 
+        [Display(Name = "Ficção científica")]
+        FICCAO_CIENTIFICA, 
+        [Display(Name = "Guerra")]
+        GUERRA, 
+        [Display(Name = "Mistério")]
+        MISTERIO, 
+        [Display(Name = "Musical")]
+        MUSICAL, 
+        [Display(Name = "Policial")]
+        POLICIAL, 
+        [Display(Name = "Romance")]
+        ROMANCE, 
+        [Display(Name = "Terror")]
+        TERROR, 
+        [Display(Name = "Thriller")]
+        THRILLER, 
+    };
+
     public enum Classificacoes: byte 
     {
         [Display(Name = "Livre")]
         CL,
+        [Display(Name = "10")]
+        C10,
         [Display(Name = "12")]
         C12,
         [Display(Name = "14")]
@@ -19,13 +63,8 @@ namespace MvcFilme.Models
         [Display(Name = "18")]
         C18
     }
-    public class Filme
+    public class Filme: BaseModelPersistence
     {
-        [Key]
-        public int Id { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid PublicId { get; set; }
 
         [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
         [StringLength(60, MinimumLength = 3)]
@@ -39,19 +78,18 @@ namespace MvcFilme.Models
         public string Capa { get; set; }
 
         [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
-        [DisplayName("Data de Lançamento"),Column(TypeName = "Date"), DataType(DataType.Date)]
+        [DisplayName("Lançamento"),Column(TypeName = "Date"), DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
         public DateTime Lancamento { get; set; }
 
         [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
-        [StringLength(30, ErrorMessage = "O campo {0} deve possível nom máximo {1} caracteres")]
         [DisplayName("Gênero")]
-        public string Genero { get; set; }
+        public GenerosFilme Genero { get; set; }
 
         [Required(ErrorMessage = "O campo {0} não pode ser vazio")]
         [DisplayName("Classificação")]
         public Classificacoes Classificacao { get; set; }
 
-        public List<Cartaz> Cartazes { get; set; } 
+        public virtual List<Cartaz> Cartazes { get; set; } 
     }
 }

@@ -19,8 +19,27 @@
       "destination": "wwwroot/lib/bootstrap/"
     },
     {
-      "library": "bootstrap-icons@1.8.1",
-      "destination": "wwwroot/lib/bootstrap-icons/"
+      "library": "cldr-core@41.0.0",
+      "destination": "wwwroot/lib/cldr-core/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "cldr-dates-modern@41.0.0",
+      "destination": "wwwroot/lib/cldr-dates-modern/",
+      "files": [
+        "README.md",
+        "package.json",
+        "bower.json",
+        "LICENSE",
+        "main/pt/ca-generic.json",
+        "main/pt/ca-gregorian.json",
+        "main/pt/dateFields.json",
+        "main/pt/timeZoneNames.json"
+      ]
     }
   ]
 }

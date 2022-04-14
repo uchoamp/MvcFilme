@@ -46,7 +46,7 @@ namespace MvcFilme.Controllers
         public async Task<IActionResult> Details([FromRoute(Name = "id")]Guid? publicId, [Bind("ApenasEmCartaz,FilmeTitulo,FilmeGenero,FilmeClassificacao,FilmeAnoLancamento,InicioExibicao,FimExibicao")] CinemaViewModel cinemaViewModel)
         {
             if (publicId == null)
-                return NotFound();
+                return PublicIdRequired();
 
             var hoje = DateTime.Now;
             var cinema = await _context.Cinema.Where(c => c.PublicId == publicId).Select(c => new Cinema
@@ -62,7 +62,7 @@ namespace MvcFilme.Controllers
             }).FirstOrDefaultAsync();
 
             if (cinema == null)
-                return NotFound();
+                return CinemaNotFound();
 
             cinemaViewModel.Cinema = cinema;
 
@@ -80,7 +80,7 @@ namespace MvcFilme.Controllers
             if (!String.IsNullOrWhiteSpace(cinemaViewModel.FilmeTitulo))
                 query = query.Where(ca => ca.Filme.Titulo.Contains(cinemaViewModel.FilmeTitulo));
 
-            if (!String.IsNullOrWhiteSpace(cinemaViewModel.FilmeGenero))
+            if (cinemaViewModel.FilmeGenero != null)
                 query = query.Where(ca => ca.Filme.Genero.Equals(cinemaViewModel.FilmeGenero));
 
             if (cinemaViewModel.FilmeClassificacao != null)
@@ -109,19 +109,22 @@ namespace MvcFilme.Controllers
                 await _context.SaveChangesAsync();
 
                 await CinemasViewModel.UpdateCidades(_context);
-
+                SetMessage("Cinema " + cinema.Nome + " adicionado com sucesso", "success");
                 return RedirectToAction(nameof(Index));
             }
             return View(cinema);
         }
 
         // GET /Cinemas/Edit/GUID
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid publicId)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")]Guid? publicId)
         {
+            if (publicId == null)
+                return PublicIdRequired();
+
             var cinema = await _context.Cinema.FirstOrDefaultAsync(f => f.PublicId == publicId);
 
             if (cinema == null)
-                return NotFound();
+                return CinemaNotFound();
 
             return View(cinema);
         }
@@ -129,29 +132,34 @@ namespace MvcFilme.Controllers
         // POST /Cinemas/Edit/GUID
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid PublicId, [Bind("PublicId,Nome,Cidade,UnidadeFederativa,Telefone")] Cinema cinema)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")]Guid? publicId, [Bind("PublicId,Nome,Cidade,UnidadeFederativa,Telefone")] Cinema updatedCinema)
         {
-            var cinemaId = await _context.Cinema.Where(c => c.PublicId == PublicId).Select(c => c.Id).FirstOrDefaultAsync();
+            if (publicId == null)
+                return PublicIdRequired();
 
-            if (cinemaId == 0)
-                return NotFound();
+            // Sem AsNoTracking ocorre um conflito de Id
+            var cinema = await _context.Cinema.AsNoTracking().Where(c => c.PublicId == publicId).Select(c => c).FirstOrDefaultAsync();
 
-            cinema.Id = cinemaId;
+            if (cinema == null)
+                return CinemaNotFound();
+
+            updatedCinema.Id = cinema.Id;
+            updatedCinema.Inserted = cinema.Inserted;
+            updatedCinema.LastUpdated = DateTime.Now;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(cinema);
+                    _context.Update(updatedCinema);
                     await _context.SaveChangesAsync();
-
                     await CinemasViewModel.UpdateCidades(_context);
-
+                    SetMessage("Cinema " + updatedCinema.Nome + " atualizado com sucesso", "success");
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CinemaExists(cinemaId))
-                        return NotFound();
+                    if (!CinemaExists(cinema.Id))
+                        return CinemaNotFound();
                     else
                         throw;
                 }
@@ -159,12 +167,16 @@ namespace MvcFilme.Controllers
 
             return View(cinema);
         }
+
         public bool CinemaExists(int id) =>
             _context.Cinema.Any(c => c.Id == id);
 
         // GET /Cinemas/Delete/GUID
-        public async Task<IActionResult> Delete([FromRoute(Name = "id")] Guid publicId)
+        public async Task<IActionResult> Delete([FromRoute(Name = "id")]Guid? publicId)
         {
+            if (publicId == null)
+                return PublicIdRequired();
+
             var cinema = await _context.Cinema.Where(c => c.PublicId == publicId).Select(c => new Cinema
             {
                 PublicId = c.PublicId,
@@ -172,10 +184,11 @@ namespace MvcFilme.Controllers
                 Cidade = c.Cidade,
                 UnidadeFederativa = c.UnidadeFederativa,
                 Telefone = c.Telefone,
-                QuantidadeCartazes = c.Cartazes.Count()
+                QuantidadeCartazes = c.Cartazes.Count(),
             }).FirstOrDefaultAsync();
+
             if (cinema == null)
-                return NotFound();
+                return CinemaNotFound();
 
             return View(cinema);
         }
@@ -186,15 +199,39 @@ namespace MvcFilme.Controllers
         public async Task<IActionResult> ConfirmDelete(Guid publicId)
         {
             var cinema = await _context.Cinema.FirstOrDefaultAsync(c => c.PublicId == publicId);
+
             if (cinema == null)
                 return NotFound();
+
+            if(cinema.Cartazes.Count > 0)
+            {
+                SetMessage("Não é possível remover um cinema que possui algum cartaz", "warning");
+                return RedirectToAction("Details", "Cinemas", new {id = cinema.PublicId});
+            }    
+
 
             _context.Remove(cinema);
             await _context.SaveChangesAsync();
             await CinemasViewModel.UpdateCidades(_context);
+            SetMessage("Cinema " + cinema.Nome + " removido com sucesso", "success");
 
             return RedirectToAction(nameof(Index));
         }
 
+        private void SetMessage(string message, string type)
+        {
+            TempData["Message"] = message;
+            TempData["MessageType"] = type;
+        }
+        private IActionResult PublicIdRequired()
+        {
+            SetMessage("Um id deve ser passado", "danger");
+            return RedirectToActionPermanent(nameof(Index));
+        }
+        private IActionResult CinemaNotFound()
+        {
+            SetMessage("Cinema não existe", "danger");
+            return RedirectToActionPermanent(nameof(Index));
+        }
     }
 }

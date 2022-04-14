@@ -14,9 +14,9 @@ namespace MvcFilme.Controllers
 
         public CartazesController(MvcFilmeContext context)
         {
-            _context = context; 
+            _context = context;
         }
-        
+
         // GET /Cartazes/Details/GUID
         public async Task<IActionResult> Details([FromRoute(Name = "id")] Guid publicId)
         {
@@ -29,7 +29,7 @@ namespace MvcFilme.Controllers
         }
 
         // GET /Cartazes/Create
-        public async Task<IActionResult> Create([Bind("FilmePublicId,CinemaPublicId")]CartazViewModel cartazViewModel)
+        public async Task<IActionResult> Create([Bind("FilmePublicId,CinemaPublicId")] CartazViewModel cartazViewModel)
         {
             await cartazViewModel.SetSelectListItems(_context);
             ModelState.Clear();
@@ -40,7 +40,7 @@ namespace MvcFilme.Controllers
         // POST /Cartazes/Create
         [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePost([Bind("FilmePublicId,CinemaPublicId,InicioExibicao,FimExibicao,Preco")]CartazViewModel cartazViewModel)
+        public async Task<IActionResult> CreatePost([Bind("FilmePublicId,CinemaPublicId,InicioExibicao,FimExibicao,Preco")] CartazViewModel cartazViewModel)
         {
             var cartaz = new Cartaz
             {
@@ -48,6 +48,7 @@ namespace MvcFilme.Controllers
                 FimExibicao = cartazViewModel.FimExibicao,
                 Preco = cartazViewModel.Preco
             };
+
             cartaz.FilmeId = await _context.Filme.Where(f => f.PublicId == cartazViewModel.FilmePublicId).Select(f => f.Id).FirstOrDefaultAsync();
             cartaz.CinemaId = await _context.Cinema.Where(c => c.PublicId == cartazViewModel.CinemaPublicId).Select(c => c.Id).FirstOrDefaultAsync();
 
@@ -61,7 +62,8 @@ namespace MvcFilme.Controllers
             {
                 _context.Add(cartaz);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Cinemas", new {id = cartazViewModel.CinemaPublicId});
+                SetMessage("O cartaz foi adicionado com sucesso", "success");
+                return RedirectToAction("Details", "Cinemas", new { id = cartazViewModel.CinemaPublicId });
             }
 
             await cartazViewModel.SetSelectListItems(_context);
@@ -69,12 +71,15 @@ namespace MvcFilme.Controllers
         }
 
         // GET /Cartazes/Edit/GUID
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid publicId)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid? publicId)
         {
+            if (publicId == null)
+                return PublicIdRequired();
+
             var cartaz = await _context.Cartaz.Include(ca => ca.Filme).Include(ca => ca.Cinema).FirstOrDefaultAsync(ca => ca.PublicId == publicId);
 
             if (cartaz == null)
-                return NotFound();
+                return CartazNotFound();
 
             var cartazViewModel = new CartazViewModel
             {
@@ -94,12 +99,15 @@ namespace MvcFilme.Controllers
         // POST /Cartazes/Edit/GUID
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid publicId, [Bind("FilmePublicId,CinemaPublicId,InicioExibicao,FimExibicao,Preco")]CartazViewModel cartazViewModel)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid? publicId, [Bind("FilmePublicId,CinemaPublicId,InicioExibicao,FimExibicao,Preco")] CartazViewModel cartazViewModel)
         {
+            if (publicId == null)
+                return PublicIdRequired();
 
             var cartaz = await _context.Cartaz.FirstOrDefaultAsync(ca => ca.PublicId == publicId);
+
             if (cartaz == null)
-                return NotFound();
+                return CartazNotFound();
 
             cartaz.InicioExibicao = cartazViewModel.InicioExibicao;
             cartaz.FimExibicao = cartazViewModel.FimExibicao;
@@ -119,15 +127,15 @@ namespace MvcFilme.Controllers
                 {
                     _context.Update(cartaz);
                     await _context.SaveChangesAsync();
+                    SetMessage("Cartaz atualizado com sucesso", "success");
                     return RedirectToAction("Details", "Cinemas", new { id = cartazViewModel.CinemaPublicId });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CartazExists(cartaz.Id))
-                        return NotFound();
+                        return CartazNotFound();
                     else
                         throw;
-
                 }
             }
 
@@ -139,30 +147,53 @@ namespace MvcFilme.Controllers
             _context.Cartaz.Any(ca => ca.Id == id);
 
         // GET /Cartazes/Delete/GUID
-        public async Task<IActionResult> Delete([FromRoute(Name = "id")] Guid publicId)
+        public async Task<IActionResult> Delete([FromRoute(Name = "id")] Guid? publicId)
         {
+            if (publicId == null)
+                return PublicIdRequired();
+
             var cartaz = await _context.Cartaz.Include(ca => ca.Filme).Include(ca => ca.Cinema).FirstOrDefaultAsync(ca => ca.PublicId == publicId);
 
             if (cartaz == null)
-                return NotFound();
+                return CartazNotFound();
 
             return View(cartaz);
         }
 
-        // GET /Cartazes/Post
+        // POST /Cartazes/Delete/GUID
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDelete(Guid publicId)
         {
             var cartaz = await _context.Cartaz.Include(ca => ca.Cinema).FirstOrDefaultAsync(ca => ca.PublicId == publicId);
+
             if (cartaz == null)
-                return NotFound();
+                return CartazNotFound();
+
 
             _context.Remove(cartaz);
             await _context.SaveChangesAsync();
+            SetMessage("Cartaz removido com sucesso", "success");
             await CinemasViewModel.UpdateCidades(_context);
+            return RedirectToAction("Details", "Cinemas", new { id = cartaz.Cinema.PublicId });
+        }
 
-            return RedirectToAction("Details", "Cinemas", new {id = cartaz.Cinema.PublicId});
+        private void SetMessage(string message, string type)
+        {
+            TempData["Message"] = message;
+            TempData["MessageType"] = type;
+        }
+
+        private IActionResult PublicIdRequired()
+        {
+            SetMessage("Um id deve ser passado", "danger");
+            return RedirectToActionPermanent(nameof(Create));
+        }
+
+        private IActionResult CartazNotFound()
+        {
+            SetMessage("Cartaz não existe", "danger");
+            return RedirectToActionPermanent(nameof(Create));
         }
     }
 }

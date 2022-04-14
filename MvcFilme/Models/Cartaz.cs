@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MvcFilme.Models
 {
-    public class Cartaz
+    public class Cartaz: BaseModelPersistence
     {
-        [Key]
-        public int Id { get; set; } 
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]   
-        public Guid PublicId { get; set; }   
-        
         [Range(1,99)]
         [DisplayName("Preço")]
         [DataType(DataType.Currency)]
@@ -34,8 +27,9 @@ namespace MvcFilme.Models
         [DisplayName("Cinema")]
         public int CinemaId { get; set; }
 
-        public Filme Filme { get; set; }
-        public Cinema Cinema { get; set; }
+        public virtual Filme Filme { get; set; }
+        public virtual Cinema Cinema { get; set; }
 
     }
+
 }

@@ -6,9 +6,13 @@
 
   <ItemGroup>
     <Compile Remove="Views\NovaPasta\**" />
+    <Compile Remove="wwwroot\lib\cldr-data\**" />
     <Content Remove="Views\NovaPasta\**" />
+    <Content Remove="wwwroot\lib\cldr-data\**" />
     <EmbeddedResource Remove="Views\NovaPasta\**" />
+    <EmbeddedResource Remove="wwwroot\lib\cldr-data\**" />
     <None Remove="Views\NovaPasta\**" />
+    <None Remove="wwwroot\lib\cldr-data\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +30,7 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0">
       <PrivateAssets>all</PrivateAssets>

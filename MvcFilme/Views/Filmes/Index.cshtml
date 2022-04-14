@@ -10,7 +10,7 @@
         <div class="col-10 border rounded p-2">
             <h5 class="text-center">Filtros</h5>
             <div class="container-fluid">
-                <form class="container justify-content-around" asp-action="Index" method="get">
+                <form class="container justify-content-around" asp-action="Index" asp-fragment="filmes" method="get">
                     <div class="row justify-content-around">
                         <div class="col">
                             <label class="form-label" asp-for="Genero"></label>
@@ -32,7 +32,32 @@
                         </div>
                         <div class="col">
                             <label class="form-label" asp-for="BuscaTitulo">Busca por Título</label>
-                            <input class="form-control" asp-for="BuscaTitulo"  placeholder="Titanic" />
+                            <input class="form-control" asp-for="BuscaTitulo" placeholder="Titanic" />
+                        </div>
+                    </div>
+                    <div class="row p-1 mt-3 mb-2">
+                        <div class="col-auto ml-2 h-100 border-end d-flex align-items-center">
+                            <strong>
+                                Ordenação
+                            </strong>
+                        </div>
+                        <div class="col d-flex justify-content-around">
+                                <div class="col-auto d-flex ml-3">
+                                    <label class="form-check-label ml-5" asp-for="Ordem">Crescente</label>
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        <input class="form-check-input" asp-for="Ordem">
+                                    </div>
+                                    <label class="form-check-label" asp-for="Ordem">Descrecente</label>
+                                </div>
+                                @foreach (KeyValuePair<string, string> tipoOrdem in Model.TiposOrdem)
+                                {
+                                    <div class="form-check col-auto">
+                                        <input class="form-check-input" type="radio" asp-for="OrdenaPor" value="@tipoOrdem.Key">
+                                        <label class="form-check-label" asp-for="OrdenaPor">
+                                            @tipoOrdem.Value
+                                        </label>
+                                    </div>
+                                }
                         </div>
                     </div>
                     <div class="row pt-2 d-flex justify-content-center">
@@ -45,34 +70,88 @@
             <a asp-action="Create" class="btn btn-success w-100">Novo Filme</a>
         </div>
     </div>
-    <div class="row mt-4 border bg-light rounded px-4 py-2 justify-content-center">
-        @foreach (var filme in Model.Filmes)
-        {
-            <div class="card p-2  pt-3 m-2 filme-card">
-                <img class="card-img-top rounded filme-capa" src="@Html.DisplayFor(modelItem => filme.Capa)" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">@Html.DisplayFor(modelItem => filme.Titulo)</h5>
-                    <p class="card-text">
-                        <strong>@Html.DisplayNameFor(modelItem => filme.Genero): </strong>
-                        <span>@Html.DisplayFor(modelItem => filme.Genero)</span>
-                        <br>
-                        <strong>@Html.DisplayNameFor(modelItem => filme.Classificacao): </strong>
-                        <span>@Html.DisplayFor(modelItem => filme.Classificacao)</span>
-                    </p>
+    <div class="row mt-4 border bg-light rounded px-4 py-2 justify-content-center" id="filmes">
+        <div class="row justify-content-center mb-3">
+            @foreach (var filme in Model.Filmes)
+            {
+                <div class="card p-2  pt-3 m-2 filme-card">
+                    <img class="card-img-top rounded filme-capa" src="@Html.DisplayFor(modelItem => filme.Capa)" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => filme.Titulo)</h5>
+                        <p class="card-text">
+                            <strong>@Html.DisplayNameFor(modelItem => filme.Genero): </strong>
+                            <span>@Html.DisplayFor(modelItem => filme.Genero)</span>
+                            <br>
+                            <strong>@Html.DisplayNameFor(modelItem => filme.Lancamento): </strong>
+                            <span>@Html.DisplayFor(modelItem => filme.Lancamento)</span>
+                            <br>
+                            <strong>@Html.DisplayNameFor(modelItem => filme.Classificacao): </strong>
+                            <span>@Html.DisplayFor(modelItem => filme.Classificacao)</span>
+                        </p>
 
-                    <div class="row px-2 mb-1">
-                        <a class="btn btn-warning" asp-action="Details" asp-route-id="@filme.PublicId">Detalhes</a>
-                    </div>
-                    <div class="row px-2 mb-1 btn-actions">
-                        <div class="col p-0">
-                            <a class="btn btn-primary w-100 h-100" asp-action="Edit" asp-route-id="@filme.PublicId">Editar</a>
+                        <div class="row px-2 mb-1">
+                            <a class="btn btn-warning" asp-action="Details" asp-route-id="@filme.PublicId">Detalhes</a>
                         </div>
-                        <div class="col p-0">
-                            <a class="btn btn-danger w-100 h-100" asp-action="Delete" asp-route-id="@filme.PublicId">Remover</a>
+                        <div class="row px-2 mb-1 btn-actions">
+                            <div class="col p-0">
+                                <a class="btn btn-primary w-100 h-100" asp-action="Edit" asp-route-id="@filme.PublicId">Editar</a>
+                            </div>
+                            <div class="col p-0">
+                                <a class="btn btn-danger w-100 h-100" asp-action="Delete" asp-route-id="@filme.PublicId">Remover</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+        <div class="row">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+
+                    @if(Model.Filmes.HasPreviosPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"  asp-all-route-data="@Model.GetRouteParams(Model.Filmes.PageIndex - 1)" >Anterior</a>
+                        </li>
+                    }else
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link" aria-disabled="true">Anterior</a>
+                        </li>
+                    }
+
+                    @foreach(var p in Model.Filmes.PreviousNeighbors(5))
+                    {
+                        <li class="page-item" aria-current="page">
+                            <a class="page-link" asp-all-route-data="@Model.GetRouteParams(p)">@p</a>
+                        </li>
+                    }
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" asp-all-route-data="@Model.GetRouteParams(Model.Filmes.PageIndex)">@Model.Filmes.PageIndex</a>
+                    </li>
+
+                    @foreach(var p in Model.Filmes.NextNeighbors(5))
+                    {
+                        <li class="page-item" aria-current="page">
+                            <a class="page-link" asp-all-route-data="@Model.GetRouteParams(p)">@p</a>
+                        </li>
+                    }
+
+                    @if(Model.Filmes.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-fragment="filme" asp-all-route-data="@Model.GetRouteParams(Model.Filmes.PageIndex + 1)">Próxima</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link" aria-disable="true">Próxima</a>
+                        </li>
+                        
+                    }
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>

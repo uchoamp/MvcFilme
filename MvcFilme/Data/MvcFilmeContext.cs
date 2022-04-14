@@ -12,6 +12,12 @@ namespace MvcFilme.Data
         public MvcFilmeContext (DbContextOptions<MvcFilmeContext> options)
             : base(options)
         {
+            
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,16 +27,54 @@ namespace MvcFilme.Data
                 .Property(f => f.PublicId)
                 .HasDefaultValueSql("NEWID()");
 
+            modelBuilder.Entity<Filme>()
+                .Property(f => f.Inserted)
+                .HasDefaultValueSql("GETDATE()"); 
+            //  .ValueGeneratedOnAdd(); // Não funciona
+
+            modelBuilder.Entity<Filme>()
+                .Property(f => f.LastUpdated)
+                .HasDefaultValueSql("GETDATE()");
+            //  .ValueGeneratedOnUpdate();
+
             modelBuilder.Entity<Cinema>()
                 .Property(c => c.PublicId)
                 .HasDefaultValueSql("NEWID()");
 
+            modelBuilder.Entity<Cinema>()
+                .Property(c => c.Inserted)
+                .HasDefaultValueSql("GETDATE()");
+            //  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Cinema>()
+                .Property(c => c.LastUpdated)
+                .HasDefaultValueSql("GETDATE()");
+            //  .ValueGeneratedOnUpdate();
+
             modelBuilder.Entity<Cartaz>()
                 .Property(c => c.PublicId)
                 .HasDefaultValueSql("NEWID()");
+           
+            modelBuilder.Entity<Cartaz>()
+                .Property(c => c.Inserted)
+                .HasDefaultValueSql("GETDATE()");
+            //  .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Cartaz>()
+                .Property(c => c.LastUpdated)
+                .HasDefaultValueSql("GETDATE()");
+            //  .ValueGeneratedOnUpdate();
 
             modelBuilder.Entity<Filme>()
                 .HasIndex(f => f.PublicId)
+                .IsUnique();
+
+            modelBuilder.Entity<Cinema>()
+                .HasIndex(c => c.PublicId)
+                .IsUnique();
+
+            modelBuilder.Entity<Filme>()
+                .HasIndex(c => c.PublicId)
                 .IsUnique();
 
             modelBuilder.Entity<Cartaz>()

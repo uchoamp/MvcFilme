@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MvcFilme.Utils;
 
 namespace MvcFilme.Models
 {
@@ -28,7 +29,7 @@ namespace MvcFilme.Models
         public List<SelectListItem> FilmeAnosLancamento { get; private set; }
 
         [DisplayName("Gênero")]
-        public string FilmeGenero { get; set; }
+        public GenerosFilme? FilmeGenero { get; set; }
 
         [DisplayName("Classificação")]
         public Classificacoes? FilmeClassificacao { get; set; }
@@ -42,6 +43,10 @@ namespace MvcFilme.Models
         [DataType(DataType.Date), DisplayName("Fim da Exibição")]
         public DateTime? FimExibicao { get; set; }
 
+        /// <summary>
+        /// Atribui as lista para as select list de forma dinâmicamente a partir do banco de dados
+        /// </summary>
+        /// <param name="context">Contexto da conexão com banco de dados</param>
         public async Task SetSelectListItems(MvcFilmeContext context)
         {
             var hoje = DateTime.Now;
@@ -51,8 +56,8 @@ namespace MvcFilme.Models
             FilmeGeneros = await baseQuery
                 .Select(c => new SelectListItem
                 {
-                    Text = c.Filme.Genero,
-                    Value = c.Filme.Genero
+                    Text = c.Filme.Genero.GetEnumDisplayName(),
+                    Value = ((int)c.Filme.Genero).ToString()
                 })
                 .Distinct().OrderBy(si => si.Value).ToListAsync();
 

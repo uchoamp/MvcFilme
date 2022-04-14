@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using MvcFilme.Data;
+using MvcFilme.Utils;
 
 namespace MvcFilme.Models
 {
-    public static class EnumExtension 
-    {
-        public static string GetEnumDisplayName(this Enum u)
-        {
-            return ((DisplayAttribute)u.GetType().GetMember(u.ToString())
-            .First().GetCustomAttributes(typeof(DisplayAttribute), false).First()).Name;
-        }
-    }
+
     public class FilmeViewModel
     {
 
@@ -49,10 +43,14 @@ namespace MvcFilme.Models
         [DataType(DataType.Date), DisplayName("Fim da Exibição")]
         public DateTime? FimExibicao { get; set; }
 
+        /// <summary>
+        /// Atribui as lista para as select list de forma dinâmicamente a partir do banco de dados
+        /// </summary>
+        /// <param name="context">Contexto da conexão com banco de dados</param>
         public async Task SetSelectListItems(MvcFilmeContext context)
         {
             var hoje = DateTime.Now;
-            var baseQuery =  context.Cartaz.Where(ca => ca.FilmeId == Filme.Id)
+            var baseQuery = context.Cartaz.Where(ca => ca.FilmeId == Filme.Id)
                 .Where(c => !ApenasEmCartaz || c.FimExibicao >= hoje);
 
             CinemaNomes = await baseQuery.Select(c => new SelectListItem { Text = c.Cinema.Nome, Value = c.Cinema.Nome }).Distinct().OrderBy(si => si.Value).ToListAsync();

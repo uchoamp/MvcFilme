@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MvcFilme.Data;
 using MvcFilme.Models;
+using MvcFilme.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace MvcFilme.Controllers
@@ -18,21 +19,44 @@ namespace MvcFilme.Controllers
         }
 
         // GET: Filmes
-        public async Task<IActionResult> Index([Bind("Genero,Classificacao,BuscaTitulo,AnoLancamento")] FilmesViewModel filmesViewModel)
+        public async Task<IActionResult> Index([Bind("Genero,Classificacao,BuscaTitulo,AnoLancamento,Ordem,OrdenaPor,PaginaAtual,QuantidadeDeItemPorPagina")] FilmesViewModel filmesViewModel)
         {
-            var filmes = from f in _context.Filme select f;
+            var query = from f in _context.Filme select f;
 
             if (!String.IsNullOrEmpty(filmesViewModel.BuscaTitulo))
-                filmes = filmes.Where(f => f.Titulo.Contains(filmesViewModel.BuscaTitulo));
-            if(!String.IsNullOrEmpty(filmesViewModel.Genero))
-                filmes = filmes.Where(f => f.Genero.Equals(filmesViewModel.Genero));
+                query = query .Where(f => f.Titulo.Contains(filmesViewModel.BuscaTitulo));
+            if(filmesViewModel.Genero != null)
+                query = query .Where(f => f.Genero.Equals(filmesViewModel.Genero));
             if(filmesViewModel.Classificacao != null)
-                filmes = filmes.Where(f => f.Classificacao.Equals(filmesViewModel.Classificacao));
+                query = query.Where(f => f.Classificacao.Equals(filmesViewModel.Classificacao));
             if (filmesViewModel.AnoLancamento != 0)
-                filmes = filmes.Where(f => f.Lancamento.Year == filmesViewModel.AnoLancamento);
+                query = query.Where(f => f.Lancamento.Year == filmesViewModel.AnoLancamento);
+
+            switch(filmesViewModel.OrdenaPor)
+            {
+                case "insercao":
+                    if (filmesViewModel.Ordem)
+                        query = query.OrderByDescending(f => f.Inserted);
+                    else
+                        query = query.OrderBy(f => f.Inserted);
+                    break;
+                case "titulo":
+                    if (filmesViewModel.Ordem)
+                        query = query.OrderByDescending(f => f.Titulo);
+                    else
+                        query = query.OrderBy(f => f.Titulo);
+                    break;
+                case "lancamento":
+                    if (filmesViewModel.Ordem)
+                        query = query.OrderByDescending(f => f.Lancamento);
+                    else
+                        query = query.OrderBy(f => f.Lancamento);
+                    break;
+            }
+
 
             await filmesViewModel.SetSelectListItems(_context);
-            filmesViewModel.Filmes = await filmes.ToListAsync(); 
+            filmesViewModel.Filmes = await PaginatedList<Filme>.CreateAsync(query, filmesViewModel.PaginaAtual, filmesViewModel.QuantidadeDeItemPorPagina);
             return View(filmesViewModel);
         }
 
@@ -40,13 +64,12 @@ namespace MvcFilme.Controllers
         public async Task<IActionResult> Details([FromRoute(Name = "id")]Guid? publicId, [Bind("ApenasEmCartaz,CinemaNome,CinemaCidade,CinemaEstado,InicioExibicao,FimExibicao")] FilmeViewModel filmeViewModel)
         {
             if (publicId == null)
-                return NotFound();
-            
+                return PublicIdRequired();
 
             var filme = await _context.Filme.FirstOrDefaultAsync(m => m.PublicId == publicId);
 
             if (filme == null)
-                return NotFound();
+                return FilmeNotFound();
             
 
             var hoje = DateTime.Now;
@@ -94,6 +117,7 @@ namespace MvcFilme.Controllers
             {
                 _context.Add(filme);
                 await _context.SaveChangesAsync();
+                SetMessage(filme.Titulo + " foi criado com sucesso!", "success");
                 return RedirectToAction(nameof(Index));
             }
             return View(filme);
@@ -102,13 +126,13 @@ namespace MvcFilme.Controllers
         // GET: Filmes/Edit/GUID
         public async Task<IActionResult> Edit([FromRoute(Name = "id")]Guid? publicId)
         {
-            if (publicId== null)
-                return NotFound();
+            if (publicId == null)
+                return PublicIdRequired();
             
 
             var filme = await _context.Filme.FirstOrDefaultAsync(f => f.PublicId == publicId);
             if (filme == null)
-                return NotFound();
+                return FilmeNotFound();
             
             return View(filme);
         }
@@ -118,43 +142,53 @@ namespace MvcFilme.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")]Guid publicId, [Bind("PublicId,Titulo,Lancamento,Genero,Capa,Classificacao,Sinopse")] Filme updatedFilme)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")]Guid? publicId, [Bind("PublicId,Titulo,Lancamento,Genero,Capa,Classificacao,Sinopse")] Filme updatedFilme)
         {
-            var filmeId = await _context.Filme.Where(f => f.PublicId.Equals(publicId)).Select(f => f.Id).FirstOrDefaultAsync();
+            if (publicId == null)
+                return PublicIdRequired(); 
 
-            if (filmeId == 0)
-                return NotFound();
+            var filme = await _context.Filme.AsNoTracking().Where(f => f.PublicId.Equals(publicId)).Select(f => f).FirstOrDefaultAsync();
 
-            updatedFilme.Id = filmeId;
+            if (filme == null)
+                return FilmeNotFound();
+
+            updatedFilme.Id = filme.Id;
+            updatedFilme.Inserted = filme.Inserted;
+            updatedFilme.LastUpdated = filme.LastUpdated;
             if (ModelState.IsValid)
             {
                 try
                 {
                     _context.Filme.Update(updatedFilme);
+                    SetMessage(updatedFilme.Titulo + " foi atualizado criado com sucesso!", "success");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmeExists(filmeId))
-                        return NotFound();
+                    if (!FilmeExists(filme.Id))
+                    {
+                        SetMessage("Filme não existe", "danger");
+                        return RedirectToAction(nameof(Index));
+                    }
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new {Id = updatedFilme.PublicId});
             }
             return View(updatedFilme);
         }
 
         // GET: Filmes/Delete/GUID
-        public async Task<IActionResult> Delete([FromRoute(Name = "id")]Guid publicId)
+        public async Task<IActionResult> Delete([FromRoute(Name = "id")]Guid? publicId)
         {
+            if (publicId == null)
+                return PublicIdRequired(); 
+
             var filme = await _context.Filme
                 .FirstOrDefaultAsync(m => m.PublicId.Equals(publicId));
 
             if (filme == null)
-            {
-                return NotFound();
-            }
+                return FilmeNotFound();
 
             return View(filme);
         }
@@ -165,17 +199,41 @@ namespace MvcFilme.Controllers
         public async Task<IActionResult> DeleteConfirmed(Guid publicId)
         {
             var filme = await _context.Filme.FirstOrDefaultAsync(f => f.PublicId.Equals(publicId));
+
             if (filme == null)
             {
                 return NotFound();
             }
+
+            if(filme.Cartazes.Count > 0)
+            {
+                SetMessage("Não é possível remover um filme que está em algum cartaz", "warning");
+                return RedirectToAction("Details", "Filmes", new {id = filme.PublicId}, "cartazes");
+            }    
+
             _context.Filme.Remove(filme);
             await _context.SaveChangesAsync();
+            SetMessage(filme.Titulo + " foi removido com successo", "success");
             return RedirectToAction(nameof(Index));
         }
 
         private bool FilmeExists(int id) =>
             _context.Filme.Any(e => e.Id == id);
-        
+
+        private void SetMessage(string message, string type)
+        {
+            TempData["Message"] = message;
+            TempData["MessageType"] = type;
+        }
+        private IActionResult PublicIdRequired()
+        {
+            SetMessage("Um id deve ser passado", "danger");
+            return RedirectToActionPermanent(nameof(Index));
+        }
+        private IActionResult FilmeNotFound()
+        {
+            SetMessage("Filme não existe", "danger");
+            return RedirectToActionPermanent(nameof(Index));
+        }
     }
 }

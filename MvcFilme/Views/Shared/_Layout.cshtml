@@ -1,12 +1,15 @@
-﻿<!DOCTYPE html> <html> 
+﻿@using MvcFilme.Utils
+
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Marcos's Movies </title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" /> 
-        <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" /> 
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development"> <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" /> <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> </environment>
@@ -37,6 +40,15 @@
         </div>
     </nav>
 
+    @if (TempData["Message"] != null && TempData["MessageType"] != null)
+    {
+        <div class="position-fixed w-25 top-0 end-0">
+            <div class="alert m-4 alert-@TempData["MessageType"] alert-dismissible fade show" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
     <partial name="_CookieConsentPartial" />
 
     <div class="container-full body-content">
@@ -71,7 +83,7 @@
         <!-- Copyright -->
         <div class="copyright bg-light p-2">
             <span class="p-1 text-dark text-center">&copy; 2022 - Marcos's Movies&trade;</span>
-        </div>  
+        </div>
         <!-- Copyright -->
     </footer>
 

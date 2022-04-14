@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MvcFilme.Data;
 
 namespace MvcFilme.Migrations
 {
     [DbContext(typeof(MvcFilmeContext))]
-    partial class MvcFilmeContextModelSnapshot : ModelSnapshot
+    [Migration("20220413112157_time_register")]
+    partial class time_register
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,8 +42,7 @@ namespace MvcFilme.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("LastUpdated")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETDATE()");
+                        .ValueGeneratedOnUpdate();
 
                     b.Property<decimal?>("Preco")
                         .HasColumnType("Decimal(4,2)");
@@ -74,8 +75,7 @@ namespace MvcFilme.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("LastUpdated")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETDATE()");
+                        .ValueGeneratedOnUpdate();
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -93,9 +93,6 @@ namespace MvcFilme.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PublicId")
-                        .IsUnique();
-
                     b.ToTable("Cinema");
                 });
 
@@ -111,7 +108,9 @@ namespace MvcFilme.Migrations
 
                     b.Property<byte>("Classificacao");
 
-                    b.Property<int>("Genero");
+                    b.Property<string>("Genero")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<DateTime>("Inserted")
                         .ValueGeneratedOnAdd()
@@ -121,8 +120,7 @@ namespace MvcFilme.Migrations
                         .HasColumnType("Date");
 
                     b.Property<DateTime>("LastUpdated")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("GETDATE()");
+                        .ValueGeneratedOnUpdate();
 
                     b.Property<Guid>("PublicId")
                         .ValueGeneratedOnAdd()
